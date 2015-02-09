@@ -25,9 +25,10 @@ npm install
 node app/app.js
 ```
 
-**Browser**
+**Browser or curl**
 ```javascript
 url: http://localhost:3000/blocks
+curl -w "@curl-format.txt" -o image.png http://localhost:3000/blocks > time.txt
 ```
 
 
