@@ -20,15 +20,24 @@ How To Start
 npm install
 ```
 
-**Node server**
+**Web app**
 ```javascript
-node app/app.js
+cp <your_web_app> /app
+```
+**Node serve**
+```javascript
+node app.js
+```
+
+**Test Web app**
+```javascript
+url: http://localhost:3000/
 ```
 
 **Browser or curl**
 ```javascript
-url: http://localhost:3000/blocks
-curl -w "@curl-format.txt" -o image.png http://localhost:3000/blocks > time.txt
+url: http://localhost:3000/shot
+curl -w "@curl-format.txt" -o image.png http://localhost:3000/shot > time.txt
 ```
 
 

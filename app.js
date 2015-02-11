@@ -1,36 +1,35 @@
+#!/bin/env node
+
+var servHost = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+var servPort = process.env.OPENSHIFT_NODEJS_PORT || '3000';
+
+
 var express = require('express');
 var app = express();
 var webshot = require('webshot');
 
 //var thief = require('color-thief');
-var gm = require('gm');
+//var gm = require('gm');
 
 var fs = require('fs');
-var fileName, timeStart, timeStop, ServHost, ServPort;
+var fileName, timeStart, timeStop;
+
 var imgOptions = {
     screenSize: {
-        width: 1000,
-        height: 480
+        width: 'all',
+        height: 40
     },
     shotSize: {
-        width: 1000,
-        height: 'all'
+        width: 'all',
+        height: 40
     },
     defaultWhiteBackground: true
 }
 
-// a middleware with no mount path; gets executed for every request to the app
-/*
-app.use(function (req, res, next) {
-    // log each request
-    console.log(req);
-
-});*/
-
 
 function logStart() {
     timeStart = Date.now();
-    fileName = timeStart + '.jpeg';
+    fileName = timeStart + '.png';
     console.log('File Name:', fileName);
     console.log('Time Start:', timeStart);
 };
@@ -44,12 +43,15 @@ function logEnd() {
 };
 
 
-app.get('/blocks', function (req, res) {
+app.get('/shot', function (req, res) {
     //log start
     logStart();
 
     // render
-    webshot('http://' + ServHost + ':' + ServPort + '/index.html', imgOptions, function (err, renderStream) {
+    var shotUrl = '//' + ServHost + ':' + ServPort + '/?params=' + req.query.params;
+    console.log(shotUrl);
+
+    webshot(shotUrl, imgOptions, function (err, renderStream) {
         var file = fs.createWriteStream('temp/' + fileName, {
             encoding: 'binary'
         });
@@ -65,62 +67,23 @@ app.get('/blocks', function (req, res) {
             });
 
 
-            var stream = fs.createReadStream('temp/' + fileName);
-            stream.pipe(res);
-
-            // log end
-            logEnd();
-        });
-    });
-});
-
-
-app.get('/blocksbw', function (req, res) {
-
-    //log start
-    logStart();
-
-    // render
-    webshot('http://' + ServHost + ':' + ServPort + '/index.html', imgOptions, function (err, renderStream) {
-        var file = fs.createWriteStream('temp/' + fileName, {
-            encoding: 'binary'
-        });
-        renderStream.on('data', function (data) {
-            file.write(data.toString('binary'), 'binary');
-
-        });
-
-        renderStream.on('end', function () {
-
-            res.writeHead(200, {
-                'Content-Type': 'image/png'
-            });
-
-
-            gm('temp/' + fileName)
-                .type('Grayscale')
-                //.monochrome()
-                //.colors(2)
-                .stream(function streamOut(err, stdout, stderr) {
-                    stdout.pipe(res); //pipe to response
+            /*if (req.query.bw === true) {
+                gm('temp/' + fileName).type('Grayscale').stream(function streamOut(err, stdout, stderr) {
+                    stdout.pipe(res); //pipe grayscale to response
                 });
+            } else {*/
+            var stream = fs.createReadStream('temp/' + fileName);
+            stream.pipe(res); //pipe color to response
+            //}
             // log end
             logEnd();
-
-
         });
-
-
     });
-
 });
-
-
-
 
 app.use(express.static(__dirname + '/app'));
 
-var server = app.listen(3000, function () {
+var server = app.listen(servPort, servHost, function () {
 
     ServHost = server.address().address
     ServPort = server.address().port
