@@ -118,7 +118,7 @@ app.get('/blocksbw', function (req, res) {
 
 
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/app'));
 
 var server = app.listen(3000, function () {
 
