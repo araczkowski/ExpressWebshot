@@ -82,8 +82,14 @@ app.get('/shot', function (req, res) {
             var stream = fs.createReadStream('temp/' + fileName);
             stream.pipe(res); //pipe color to response
             //}
+
+            // delete temp file
+            fs.unlinkSync('temp/' + fileName);
+
             // log end
             logEnd();
+
+            // TODO
         });
     });
 });
