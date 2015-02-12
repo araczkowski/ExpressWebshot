@@ -51,6 +51,13 @@ app.get('/shot', function (req, res) {
     var shotUrl = '//' + ServHost + ':' + ServPort + '/?params=' + req.query.params;
     console.log(shotUrl);
 
+    var params;
+    try {
+        params = JSON.parse(req.query.params);
+    } catch (err) {
+        console.log('NO JSON in params! ' + err.message);
+    }
+
     webshot(shotUrl, imgOptions, function (err, renderStream) {
         var file = fs.createWriteStream('temp/' + fileName, {
             encoding: 'binary'
