@@ -1,1 +1,1 @@
-../ClickableBlocks/app/
+../ClickableBlocks/dist/
