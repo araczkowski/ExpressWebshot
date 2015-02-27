@@ -20,24 +20,103 @@ How To Start
 $ npm install
 ```
 
-**Add Web app to app folder**
-```bash
-$ cp <web_app_dist> /app
-```
 **Node serve**
 ```javascript
 $ node app.js
 ```
 
-**Test Web app**
+**Take the shot**
 ```javascript
-url: http://localhost:3000/
+url: http://localhost:3000/shot/?params={"internal":{"shotSize":{"height":"all","width":"430"},"shotUrl":"http://sviete.pl"}}
 ```
 
-**Browser or curl**
+**Additionally you can add your web app files to the /app folder and serve it from nodejs - to take a screen shot on this app**
+
+***Add Web app to app folder***
+```bash
+$ cp <web_app_dist> /app
+```
+
+***Browser or curl***
 ```javascript
 url: http://localhost:3000/shot
  $ curl -w "@curl-format.txt" -o image.png http://localhost:3000/shot > time.txt
+```
+
+How to take a shot from any Website
+===========================
+## Internal parameters 
+
+By default options are: 
+```javascript
+{  
+   "internal":{  
+      "screenSize":{  
+         "width":"all",
+         "height":"all"
+      },
+      "shotSize":{  
+         "width":"all",
+         "height":"all"
+      },
+      "defaultWhiteBackground":"true",
+      "shotUrl":"'//' + ServHost + ':' + ServPort"
+   }
+}
+```
+If you want to override the default parameters you can pass new values in the url, for example
+http://localhost:3000/shot/?params={"internal":{"shotSize":{"height":"all","width":"430"},"shotUrl":"http://sviete.pl"}}
+
+
+
+
+Using with the ClickableBlocks Web app
+===========================
+
+The app repo
+https://github.com/araczkowski/ClickableBlocks
+
+**Add ClickableBlocks Web app dist to ExpressWebshot/app folder**
+```bash
+$ cd ExpressWebshot
+$ cp ../ClickableBlocks/dist /app
+```
+
+
+To produce a image with a schedule we need to provide aditional (external) parameters to the ClickableBlocks app
+
+
+## Sample parameters for ClickableBlocks
+
+```javascript
+{
+   "external":{
+      "options":{
+         "min":360,
+         "max":1140,
+         "mode":"real"
+      },
+      "schedule":{
+         "blocks":[
+            {
+               "id":1,
+               "start":480,
+               "value":60,
+               "planned":"1",
+               "real":"1"
+            }
+         ],
+         "meal":"1",
+         "rmeal":"1"
+      }
+   }
+}
+```
+
+## Sample URL
+
+```javascript
+http://localhost:3000/shot/?params={"internal":{"shotSize":{"width":"all","height":"40"}},"external":{"options":{"min":360,"max":1140,"mode":"real"},"schedule":{"blocks":[{"id":1,"start":480,"value":60,"planned":"1","real":"1"}],"meal":"1","rmeal":"1"}}}
 ```
 
 
@@ -141,59 +220,3 @@ TODO
 
 
 
-Using with any Web app 
-===========================
-## Image parameters in url
-http://localhost:3000/shot/?params={"image":{"height":"40"}}
-
-```javascript
-{  
-   "image":{  
-      "height":"40"
-   }
-}
-```
-
-
-Using with the ClickableBlocks Web app 
-===========================
-
-the app repo
-https://github.com/araczkowski/ClickableBlocks
-
-## Sample general options
-
-```javascript
-{  
-   "options":{  
-      "min":360,
-      "max":1140,
-      "mode":"real"
-   }
-}
-```
-
-## Sample schedule definition
-
-```javascript
-{  
-   "schedule":{  
-      "blocks":[  
-         {  
-            "id":1,
-            "start":480,
-            "value":60,
-            "planned":"1",
-            "real":"1"
-         }
-      ],
-      "meal":"1",
-      "rmeal":"1"
-   }
-}
-
-## Sample URL
-
-```javascript
-http://localhost:3000/shot/?params={"options":{"min":360,"max":1140,"mode":"real"},"schedule":{"blocks":[{"id":1,"start":480,"value":60,"planned":"1","real":"1"}],"meal":"1","rmeal":"1"},"image":{"height":"40"}}
-```

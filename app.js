@@ -7,7 +7,7 @@ var app = express();
 var webshot = require('webshot');
 var timeStart, timeStop;
 
-var imgOptions = {
+var internalOptions = {
     screenSize: {
         width: 'all',
         height: 'all'
@@ -16,7 +16,8 @@ var imgOptions = {
         width: 'all',
         height: 'all'
     },
-    defaultWhiteBackground: true
+    defaultWhiteBackground: true,
+    shotUrl: ''
 }
 
 
@@ -31,26 +32,70 @@ function logEnd() {
     console.log('Req:', timeStart, 'execution time [ms]:', differenceMs);
 };
 
+function mergeOptions(userOptions) {
+
+    // reset default
+    internalOptions.screenSize.width = 'all';
+    internalOptions.screenSize.height = 'all';
+    internalOptions.shotSize.width = 'all';
+    internalOptions.shotSize.height = 'all';
+    defaultWhiteBackground = true;
+    internalOptions.shotUrl = '//' + ServHost + ':' + ServPort;
+
+    if (!userOptions) {
+        return internalOptions;
+    }
+    for (var optionKey in internalOptions) {
+        if (optionKey in userOptions) {
+            switch (typeof internalOptions[optionKey]) {
+            case 'boolean':
+                internalOptions[optionKey] = !!userOptions[optionKey];
+                break;
+            case 'number':
+                internalOptions[optionKey] = Math.abs(userOptions[optionKey]);
+                break;
+            case 'string':
+                internalOptions[optionKey] = '' + userOptions[optionKey];
+                break;
+            default:
+                internalOptions[optionKey] = userOptions[optionKey];
+            }
+        }
+    }
+    return internalOptions;
+};
+
 
 app.get('/shot', function (req, res) {
     logStart();
 
-    var shotUrl = '//' + ServHost + ':' + ServPort + '/?params=' + req.query.params;
+
     //console.log(shotUrl);
 
-    var params;
+    var params, internalParams, externalParams;
     try {
         params = JSON.parse(req.query.params);
-        if (typeof (params.image) !== 'undefined') {
-            imgOptions.shotSize.height = params.image.height || 'all';
+        if (typeof (params.external) !== 'undefined') {
+            externalParams = JSON.stringify(params.external);
+        }
+        if (typeof (params.internal) !== 'undefined') {
+            internalParams = params.internal;
         };
+
     } catch (err) {
         console.log('NO JSON in params! ' + err.message);
+
     }
 
+    mergeOptions(internalParams);
+    internalOptions.shotUrl = internalOptions.shotUrl + '/?params=' + externalParams;
+    console.log(internalOptions.shotUrl);
 
 
-    webshot(shotUrl, imgOptions, function (err, renderStream) {
+
+
+
+    webshot(internalOptions.shotUrl, internalOptions, function (err, renderStream) {
         renderStream.pipe(res);
 
         renderStream.on('end', function () {
