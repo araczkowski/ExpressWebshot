@@ -16,17 +16,17 @@ How To Start
 ===========================
 
 **NPM**
-```javascript
-npm install
+```bash
+$ npm install
 ```
 
 **Web app**
-```javascript
-cp <your_web_app> /app
+```bash
+cp <web_app_dist> /app
 ```
 **Node serve**
 ```javascript
-node app.js
+$ node app.js
 ```
 
 **Test Web app**
@@ -37,7 +37,7 @@ url: http://localhost:3000/
 **Browser or curl**
 ```javascript
 url: http://localhost:3000/shot
-curl -w "@curl-format.txt" -o image.png http://localhost:3000/shot > time.txt
+ $ curl -w "@curl-format.txt" -o image.png http://localhost:3000/shot > time.txt
 ```
 
 
@@ -55,7 +55,7 @@ $ pm2 start pm2-app.json
 
 ### Process management
 
-Once apps are started you can list and manage them easily:
+Once app is started you can list and manage is easily:
 
 ![Process listing](https://raw.githubusercontent.com/araczkowski/ExpressWebshot/master/doc/pm2-list.png)
 
@@ -65,7 +65,7 @@ Listing all running processes:
 $ pm2 list
 ```
 
-Managing your processes is straightforward:
+Managing the processes is straightforward:
 
 ```bash
 $ pm2 stop     node-express-webshot-app
@@ -74,6 +74,9 @@ $ pm2 delete   node-express-webshot-app
 ```
 
 To have more details on the process:
+
+![Process details](https://raw.githubusercontent.com/araczkowski/ExpressWebshot/master/doc/pm2-desc.png)
+
 
 ```bash
 $ pm2 desc node-express-webshot-app
@@ -117,7 +120,7 @@ $ pm2 reload node-express-webshot-app           # Reload the apps in 0s manner
 
 ### Startup script generation
 
-PM2 can generate and configure a startup script to keep PM2 and your processes alive at every server restart.
+PM2 can generate and configure a startup script to keep PM2 and the process alive at every server restart.
 
 ```bash
 $ pm2 startup
