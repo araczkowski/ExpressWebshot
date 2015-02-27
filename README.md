@@ -57,7 +57,7 @@ $ pm2 start pm2-app.json
 
 Once apps are started you can list and manage them easily:
 
-![Process listing](https://raw.githubusercontent.com/araczkowski/ExpressWebshot/master/pm2-list.png)
+![Process listing](https://raw.githubusercontent.com/araczkowski/ExpressWebshot/master/doc/pm2-list.png)
 
 Listing all running processes:
 
@@ -81,7 +81,7 @@ $ pm2 desc node-express-webshot-app
 
 ### Monitoring
 
-![Monit](https://raw.githubusercontent.com/araczkowski/ExpressWebshot/master/pm2-monit.png)
+![Monit](https://raw.githubusercontent.com/araczkowski/ExpressWebshot/master/doc/pm2-monit.png)
 
 Monitoring the processe:
 
@@ -91,7 +91,7 @@ $ pm2 monit node-express-webshot-app
 
 ### Log facilities
 
-![Monit](https://raw.githubusercontent.com/araczkowski/ExpressWebshot/master/pm2-logs.png)
+![Monit](https://raw.githubusercontent.com/araczkowski/ExpressWebshot/master/doc/pm2-logs.png)
 
 Displaying logs of a specified process or all processes, in real time:
 
