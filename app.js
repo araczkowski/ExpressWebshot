@@ -10,11 +10,11 @@ var timeStart, timeStop;
 var imgOptions = {
     screenSize: {
         width: 'all',
-        height: 40
+        height: 'all'
     },
     shotSize: {
         width: 'all',
-        height: 40
+        height: 'all'
     },
     defaultWhiteBackground: true
 }
@@ -41,9 +41,14 @@ app.get('/shot', function (req, res) {
     var params;
     try {
         params = JSON.parse(req.query.params);
+        if (typeof (params.image) !== 'undefined') {
+            imgOptions.shotSize.height = params.image.height || 'all';
+        };
     } catch (err) {
         console.log('NO JSON in params! ' + err.message);
     }
+
+
 
     webshot(shotUrl, imgOptions, function (err, renderStream) {
         renderStream.pipe(res);

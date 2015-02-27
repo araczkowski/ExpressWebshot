@@ -20,9 +20,9 @@ How To Start
 $ npm install
 ```
 
-**Web app**
+**Add Web app to app folder**
 ```bash
-cp <web_app_dist> /app
+$ cp <web_app_dist> /app
 ```
 **Node serve**
 ```javascript
@@ -41,8 +41,7 @@ url: http://localhost:3000/shot
 ```
 
 
-
-Start with PM2 
+Work with PM2 
 ===========================
 
 ## Start an application
@@ -107,7 +106,7 @@ $ pm2 flush          # Clear all the logs
 
 When an app is started with the -i <worker number> option, the **cluster** mode is enabled.
 
-**Warning**: It's still a beta feature. If you want to use the embed cluster module or reload with 0s downtime, PM2 recommend the use of node#0.12.0+ node#0.11.16+ or io.js#1.0.2+. They do not support node#0.10.* cluster module anymore!
+**Warning**: It's still a beta feature. If you want to use the embed cluster module or reload with 0s downtime, PM2 recommend the use of node#0.12.0+ node#0.11.16+ or io.js#1.0.2+. They do not support node#0.1$ 0.* cluster module anymore!
 
 With the cluster mode, PM2 enables load balancing between each worker.
 Each HTTP/TCP/UDP request will be forwarded to one specific process at a time.
@@ -136,3 +135,65 @@ To save a process list just do:
 $ pm2 save
 ```
 
+### Update the node-express-webshot-app 
+
+TODO
+
+
+
+Using with any Web app 
+===========================
+## Image parameters in url
+http://localhost:3000/shot/?params={"image":{"height":"40"}}
+
+```javascript
+{  
+   "image":{  
+      "height":"40"
+   }
+}
+```
+
+
+Using with the ClickableBlocks Web app 
+===========================
+
+the app repo
+https://github.com/araczkowski/ClickableBlocks
+
+## Sample general options
+
+```javascript
+{  
+   "options":{  
+      "min":360,
+      "max":1140,
+      "mode":"real"
+   }
+}
+```
+
+## Sample schedule definition
+
+```javascript
+{  
+   "schedule":{  
+      "blocks":[  
+         {  
+            "id":1,
+            "start":480,
+            "value":60,
+            "planned":"1",
+            "real":"1"
+         }
+      ],
+      "meal":"1",
+      "rmeal":"1"
+   }
+}
+
+## Sample URL
+
+```javascript
+http://localhost:3000/shot/?params={"options":{"min":360,"max":1140,"mode":"real"},"schedule":{"blocks":[{"id":1,"start":480,"value":60,"planned":"1","real":"1"}],"meal":"1","rmeal":"1"},"image":{"height":"40"}}
+```
