@@ -1,0 +1,46 @@
+{
+    "apps": [
+
+        {
+            "name": "node-express-webshot-app",
+            "script": "app.js",
+            "cwd": "/home/andrzej/Projects/SIGI/ExpressWebshot",
+            "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+            "log_file": "/home/andrzej/Projects/SIGI/ExpressWebshot/logs/app.log",
+            "error_file": "/home/andrzej/Projects/SIGI/ExpressWebshot/logs/err.log",
+            "out_file": "/home/andrzej/Projects/SIGI/ExpressWebshot/logs/out.log",
+            "pid_file": "/home/andrzej/Projects/SIGI/ExpressWebshot/logs/app.pid",
+            "instances": 2,
+            "watch": false,
+            "exec_mode": "cluster_mode",
+            "env": {
+                "COMMON_VARIABLE": "true"
+            },
+            "env_production": {
+                "NODE_ENV": "production"
+            }
+    }
+  ],
+
+    "deploy": {
+        "production": {
+            "user": "node",
+            "host": "212.83.163.1",
+            "ref": "origin/master",
+            "repo": "git@github.com:repo.git",
+            "path": "/var/www/production",
+            "post-deploy": "pm2 startOrRestart ecosystem.json --env production"
+        },
+        "dev": {
+            "user": "node",
+            "host": "212.83.163.1",
+            "ref": "origin/master",
+            "repo": "git@github.com:repo.git",
+            "path": "/var/www/development",
+            "post-deploy": "pm2 startOrRestart ecosystem.json --env dev",
+            "env": {
+                "NODE_ENV": "dev"
+            }
+        }
+    }
+}
