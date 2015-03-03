@@ -7,7 +7,7 @@
     "error_file": "/home/andrzej/Projects/SIGI/ExpressWebshot/logs/err.log",
     "out_file": "/home/andrzej/Projects/SIGI/ExpressWebshot/logs/out.log",
     "pid_file": "/home/andrzej/Projects/SIGI/ExpressWebshot/logs/app.pid",
-    "instances": 3,
+    "instances": 2,
     "watch": false,
     "exec_mode": "cluster_mode"
 }

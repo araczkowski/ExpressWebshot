@@ -69,15 +69,13 @@ function mergeOptions(userOptions) {
 app.get('/shot', function (req, res) {
     logStart();
 
-
-    //console.log(shotUrl);
-
     var params, internalParams, externalParams;
     try {
         params = JSON.parse(req.query.params);
         if (typeof (params.external) !== 'undefined') {
             externalParams = JSON.stringify(params.external);
         }
+
         if (typeof (params.internal) !== 'undefined') {
             internalParams = params.internal;
         };
@@ -89,11 +87,6 @@ app.get('/shot', function (req, res) {
 
     mergeOptions(internalParams);
     internalOptions.shotUrl = internalOptions.shotUrl + '/?params=' + externalParams;
-    console.log(internalOptions.shotUrl);
-
-
-
-
 
     webshot(internalOptions.shotUrl, internalOptions, function (err, renderStream) {
         renderStream.pipe(res);
