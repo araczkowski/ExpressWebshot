@@ -4,8 +4,8 @@
     "autor": "andrzej.raczkowski@sviete.pl",
     "private": true,
     "dependencies": {
-        "express": "~4.11.2",
-        "webshot": "~0.15.3",
+        "express": "~4.13.4",
+        "webshot": "~0.18.0",
         "gm": "~1.17.0"
     }
 }
