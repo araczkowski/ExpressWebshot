@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3 chart 2</title>
+  <style>
+    .main text {
+      font: 12px sans-serif;
+    }
+
+    text.box-bottom-label {
+      font: 14px sans-serif;
+    }
+
+    text.box-top-label {
+      font: 16px sans-serif;
+    }
+
+    text.legend-label {
+      font: 18px sans-serif;
+    }
+    tspan.legend-bottom-label {
+      font: 14px sans-serif;
+    }
+
+    .axis path {
+      stroke: none;
+      fill: none;
+    }
+
+    rect.rect-dot {
+      transform-origin: 50% 50%;
+      transform: rotate(45deg);
+    }
+  </style>
+</head>
+
+<body>
+  <div class='content'>
+  </div>
+  <script type="text/javascript" src="js/d3.min.js"></script>
+</body>
+
+<script>
+  var data = [{
+    "xy": [{
+      "x": 2013,
+      "y": 8
+    }, {
+      "x": 2014,
+      "y": 8
+    }],
+    "r": 0,
+    "color": "fe3000",
+    "label": "Consommation de chaleur",
+    "label2": ["Energie finale", "chaleur"],
+    "label3": "kWh/(m2a)",
+    "label4": "GWh/a"
+  }, {
+    "xy": [{
+      "x": 2013,
+      "y": 7
+    }],
+    "r": 0,
+    "color": "6477fe",
+    "label": "Consommation d'électricité",
+    "label2": ["Energie finale", "électricité"],
+    "label3": "kWh/(m2a)",
+    "label4": "GWh/a"
+  }, {
+    "xy": [{
+      "x": 2013,
+      "y": 9
+    }],
+    "r": 0,
+    "color": "2d9256",
+    "label": "Energie primaire",
+    "label2": ["Energie", "primaire"],
+    "label3": "kWh/(m2a)",
+    "label4": "GWh/a"
+  }, {
+    "xy": [{
+      "x": 2013,
+      "y": 7.5
+    }],
+    "r": 5,
+    "color": "969696",
+    "label": "Emissions de gaz à effet de serre",
+    "label2": ["Gaz à effet", "de serre"],
+    "label3": "CO2 kg/m2",
+    "label4": "CO2 t/a"
+  }];
+
+  var margin = {
+      top: 40,
+      right: 40,
+      bottom: 60,
+      left: 10,
+      legend: 200
+    },
+    width = 500 - margin.left - margin.right,
+    height = 560 - margin.top - margin.bottom;
+
+  var chart = d3.select('body')
+    .append('svg:svg')
+    .attr('width', width + margin.right + margin.left + margin.legend)
+    .attr('height', height + margin.top + margin.bottom)
+    .attr('class', 'chart');
+
+  var main = chart.append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('class', 'main')
+
+  // BOXES
+  var boxes = main.append("g")
+    .attr('transform', 'translate(0,0)')
+    .attr('class', 'boxes');
+
+  var boxesItems = boxes.append("g")
+    .selectAll("g")
+    .data(data)
+    .enter()
+    .append('g')
+    .attr('class', 'box-item')
+    .attr('transform', function(d, i) {
+      var height = 500;
+      var x = i * 120;
+      var y = 0;
+      return 'translate(' + x + ',' + y + ')';
+    });
+
+  boxesItems.append('rect')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', 100)
+    .attr('height', 410)
+    .style('fill', 'ffffff')
+    .style('stroke-width', '3')
+    .style('stroke', function(d) {
+      return d.color;
+    });
+  boxesItems.append('line')
+    .attr('x1', 0)
+    .attr('y1', 205)
+    .attr('x2', 100)
+    .attr('y2', 205)
+    .attr('stroke', '#fdbd26')
+    .attr('stroke-width', 5);
+
+  boxesItems.append('rect')
+    .attr('x', 0)
+    .attr('y', 412)
+    .attr('width', 100)
+    .attr('height', 50)
+    .style('fill', 'ffffff')
+    .style('stroke-width', '2')
+    .style('stroke', '#d1d1d1');
+
+  boxesItems.append('text')
+    .attr('x', 50)
+    .attr('y', 430)
+    .style('fill', '#818181')
+    .attr("font-family", "sans-serif")
+    .attr("class", "box-bottom-label")
+    .attr('text-anchor', 'middle')
+    .text(function(d) {
+      return d.label3;
+    });
+
+  boxesItems.append('rect')
+    .attr('x', 0)
+    .attr('y', 452)
+    .attr('width', 100)
+    .attr('height', 50)
+    .style('fill', 'ffffff')
+    .style('stroke-width', '2')
+    .style('stroke', '#d1d1d1');
+
+  boxesItems.append('text')
+    .attr('x', 50)
+    .attr('y', 470)
+    .style('fill', '#818181')
+    .attr("font-family", "sans-serif")
+    .attr("class", "box-bottom-label")
+    .attr('text-anchor', 'middle')
+    .text(function(d) {
+      return d.label4;
+    });
+
+  var topBoxText = boxesItems.append('text')
+    .attr('x', 50)
+    .attr('text-anchor', 'middle')
+    .attr('y', -20)
+    .style('fill', '#818181')
+    .attr("font-family", "sans-serif")
+    .attr("class", "box-top-label");
+  topBoxText.append('tspan')
+    .text(function(d) {
+      return d.label2[0];
+    });
+  topBoxText.append('tspan')
+    .attr('dy', 16)
+    .attr('x', 50)
+    .attr('text-anchor', 'middle')
+    .text(function(d) {
+      return d.label2[1];
+    });
+
+  var t1 = chart.append('text')
+    .attr('y', 80)
+    .attr('x', 472)
+    .attr('text-anchor', 'start')
+    .text('·····')
+    .attr('fill', 'white')
+    .attr('class', 'legend-label');
+  t1.append('tspan')
+    .attr('fill', '#868686')
+    .text('Consommation faible');
+
+  var t2 = chart.append('text')
+    .attr('y', 200)
+    .attr('x', 472)
+    .attr('text-anchor', 'start')
+    .text('·····Valeur-cible')
+    .attr('fill', '#4da371')
+    .attr('class', 'legend-label');
+  var t3 = chart.append('text')
+    .attr('y', 250)
+    .attr('x', 472)
+    .attr('text-anchor', 'start')
+    .text('·····')
+    .attr('fill', 'white')
+    .attr('class', 'legend-label');
+  t3.append('tspan')
+    .text('Indice de référence')
+    .attr('fill', '#f7a319');
+  var t4 = chart.append('text')
+    .attr('y', 300)
+    .attr('x', 472)
+    .attr('text-anchor', 'start')
+    .text('·····Valeur-limite')
+    .attr('fill', '#e2635a')
+    .attr('class', 'legend-label');
+
+  var t5 = chart.append('text')
+    .attr('y', 420)
+    .attr('x', 472)
+    .attr('text-anchor', 'start')
+    .text('·····')
+    .attr('fill', 'white')
+    .attr('class', 'legend-label');
+  t5.append('tspan')
+    .attr('fill', '#868686')
+    .text('Consommation élevée');
+  var t6 = chart.append('text')
+    .attr('y', 480)
+    .attr('x', 472)
+    .attr('text-anchor', 'start')
+    .text('·····')
+    .attr('fill', 'white')
+    .attr('class', 'legend-label');
+  t6.append('tspan')
+    .attr('fill', '#868686')
+    .text('Surf. de réf. énergét.')
+    .attr('class','legend-bottom-label');
+
+    var t7 = chart.append('text')
+      .attr('y', 530)
+      .attr('x', 472)
+      .attr('text-anchor', 'start')
+      .text('·····')
+      .attr('fill', 'white')
+      .attr('class', 'legend-label');
+    t7.append('tspan')
+      .attr('fill', '#868686')
+      .text('Nombre d\'objets')
+      .attr('class','legend-bottom-label');
+</script>
+
+</html>

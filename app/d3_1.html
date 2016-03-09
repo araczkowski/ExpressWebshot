@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3 chart 1</title>
+  <style>
+    .main text {
+      font: 12px sans-serif;
+    }
+
+    .axis path {
+      stroke: none;
+      fill: none;
+    }
+
+    rect.rect-dot {
+      -webkit-transform-origin: 50% 50%;
+      -webkit-transform: rotate(45deg);
+    }
+  </style>
+</head>
+
+<body>
+  <div class='content'>
+    <!-- /the chart goes here -->
+  </div>
+  <script type="text/javascript" src="js/d3.min.js"></script>
+</body>
+
+<script>
+  var data = [{
+    "xy": [{
+      "x": 2013,
+      "y": 8
+    }, {
+      "x": 2014,
+      "y": 7
+    }, {
+      "x": 2012,
+      "y": 7
+    }],
+    "r": 0,
+    "color": "fe3000",
+    "label": "Consommation de chaleur"
+  }, {
+    "xy": [{
+      "x": 2013,
+      "y": 7
+    }],
+    "r": 0,
+    "color": "6477fe",
+    "label": "Consommation d'électricité"
+  }, {
+    "xy": [{
+      "x": 2013,
+      "y": 9
+    }],
+    "r": 0,
+    "color": "2d9256",
+    "label": "Energie primaire"
+  }, {
+    "xy": [{
+      "x": 2013,
+      "y": 7.5
+    }],
+    "r": 5,
+    "color": "969696",
+    "label": "Emissions de gaz à effet de serre"
+  }];
+
+  var margin = {
+      top: 32,
+      right: 40,
+      bottom: 60,
+      left: 10,
+      legend: 60
+    },
+    width = 500 - margin.left - margin.right,
+    height = 560 - margin.top - margin.bottom - margin.legend;
+
+  var x = d3.scale.linear()
+    .domain([2002.5, 2015.5])
+    .range([0, width]);
+
+  var y = d3.scale.linear()
+    .domain([11.5, -0.5])
+    .range([height, 0]);
+
+  var chart = d3.select('body')
+    .append('svg:svg')
+    .attr('width', width + margin.right + margin.left)
+    .attr('height', height + margin.top + margin.bottom + margin.legend)
+    .attr('class', 'chart');
+
+  var main = chart.append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('class', 'main')
+
+  // draw the x axis
+  var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient('top')
+    .tickFormat(function(d) {
+      return d + "";
+    });
+
+  main.append('g')
+    .attr('class', 'axis date')
+    .call(xAxis)
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "32px")
+    .attr("dy", "12px")
+    .attr("transform", function(d) {
+      return "rotate(-90)"
+    });
+
+  // draw the y axis
+  var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient('right')
+    .tickFormat(function(d) {
+      switch (d) {
+        case 0:
+          return "0%";
+          break;
+        case 1:
+          return "10%";
+          break;
+        case 2:
+          return "20%";
+          break;
+        case 3:
+          return "40%";
+          break;
+        case 4:
+          return "60%";
+          break;
+        case 5:
+          return "80%";
+          break;
+        case 6:
+          return "100%";
+          break;
+        case 7:
+          return "120%";
+          break;
+        case 8:
+          return "140%";
+          break;
+        case 9:
+          return "200%";
+          break;
+        case 10:
+          return "300%";
+          break;
+        case 11:
+          return "400%";
+          break;
+        default:
+          "???";
+      }
+    });
+
+  var svg = main.append("svg");
+  var gradient = svg.append("svg:defs")
+    .append("svg:linearGradient")
+    .attr("id", "gradient")
+    .attr("x1", "100%")
+    .attr("y1", "100%")
+    .attr("x2", "100%")
+    .attr("y2", "40%")
+    .attr("x3", "100%")
+    .attr("y3", "100%")
+    .attr("spreadMethod", "pad");
+
+  gradient.append("svg:stop")
+    .attr("offset", "20%")
+    .attr("stop-color", "#eb742b")
+    .attr("stop-opacity", 1);
+  gradient.append("svg:stop")
+    .attr("offset", "80%")
+    .attr("stop-color", "#f4d62a")
+    .attr("stop-opacity", 1);
+  gradient.append("svg:stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#6bbd67")
+    .attr("stop-opacity", 1);
+  svg.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .style("fill", "url(#gradient)");
+
+  main.append('g')
+    .attr('transform', 'translate(0,0)')
+    .attr('class', 'axis date')
+    .attr("transform", "translate(" + width + ",0)")
+    .call(yAxis)
+    .selectAll("line").style("stroke", "black")
+    .style("fill", "url(#gradient)");
+
+  var g = svg.append("g");
+
+  var dots = g.selectAll("dots-serie")
+    .data(function(d, i) {
+      return data;
+    })
+    .enter()
+    .append("svg:g")
+    .style("fill", function(d) {
+      return d.color;
+    })
+    .each(function() {
+      var scatter = d3.select(this);
+      scatter.selectAll("dots")
+        .data(function(d) {
+          return d.xy;
+        }) // second level data-join
+        .enter().append("svg:rect")
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("x", function(d) {
+          return x(d.x);
+        })
+        .attr("y", function(d) {
+          return y(d.y);
+        })
+        .attr('class', 'rect-dot')
+        .attr("rx", scatter.data()[0].r)
+        .attr("ry", scatter.data()[0].r);
+    });
+
+  // LEGEND
+  var legend = main.append("g")
+    .attr('transform', 'translate(0,430)')
+    .attr('class', 'legend');
+
+  var legendItems = legend.append("g")
+    .selectAll("g")
+    .data(data)
+    .enter()
+    .append('g')
+    .attr('class', 'legend-item')
+    .attr('transform', function(d, i) {
+      var height = 10;
+      var x = 0;
+      var y = i * 16;
+      return 'translate(' + x + ',' + y + ')';
+    });
+
+  legendItems.append('rect')
+    .attr('x', 30)
+    .attr('y', -8)
+    .attr('rx', function(d) {
+      return d.r;
+    })
+    .attr('ry', function(d) {
+      return d.r;
+    })
+    .attr('width', 10)
+    .attr('height', 10)
+    .style('fill', function(d) {
+      return d.color;
+    })
+    .attr('class', 'rect-dot');
+
+  legendItems.append('text')
+    .attr('x', 55)
+    .attr('y', 0)
+    .text(function(d) {
+      return d.label;
+    });
+</script>
+
+</html>

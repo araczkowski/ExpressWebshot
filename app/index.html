@@ -1,0 +1,335 @@
+<!doctype html>
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>d3 chart 1</title>
+    <style>
+      .main text {
+        font: 12px sans-serif;
+      }
+
+      .axis path {
+        stroke: none;
+        fill: none;
+      }
+
+      rect.rect-dot {
+        -webkit-transform-origin: 50% 50%;
+        -webkit-transform: rotate(45deg);
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div class='content'>
+      <!-- /the chart goes here -->
+    </div>
+    <script type="text/javascript" src="js/d3.min.js"></script>
+  </body>
+
+  <script>
+
+    function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+      return results === null
+        ? ""
+        : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+    var params;
+    try {
+      params = JSON.parse(getParameterByName('params'));
+    } catch (err) {
+      params = false;
+    }
+    if (params) {
+
+      var data = [
+        {
+          "xy": [
+            {
+              "x": 2013,
+              "y": 8
+            }, {
+              "x": 2014,
+              "y": 8
+            }
+          ],
+          "r": 0,
+          "color": "fe3000",
+          "label": "Consommation de chaleur",
+          "label2": [
+            "Energie finale", "chaleur"
+          ],
+          "label3": "kWh/(m2a)",
+          "label4": "GWh/a"
+        }, {
+          "xy": [
+            {
+              "x": 2013,
+              "y": 7
+            }
+          ],
+          "r": 0,
+          "color": "6477fe",
+          "label": "Consommation d'électricité",
+          "label2": [
+            "Energie finale", "électricité"
+          ],
+          "label3": "kWh/(m2a)",
+          "label4": "GWh/a"
+        }, {
+          "xy": [
+            {
+              "x": 2013,
+              "y": 9
+            }
+          ],
+          "r": 0,
+          "color": "2d9256",
+          "label": "Energie primaire",
+          "label2": [
+            "Energie", "primaire"
+          ],
+          "label3": "kWh/(m2a)",
+          "label4": "GWh/a"
+        }, {
+          "xy": [
+            {
+              "x": 2013,
+              "y": 7.5
+            }
+          ],
+          "r": 5,
+          "color": "969696",
+          "label": "Emissions de gaz à effet de serre",
+          "label2": [
+            "Gaz à effet", "de serre"
+          ],
+          "label3": "CO2 kg/m2",
+          "label4": "CO2 t/a"
+        }
+      ];
+
+
+      data = mergeData(params.data);
+
+      function mergeData(d) {
+        // reset default
+
+        if (!d) {
+          return data;
+        }
+
+        return d;
+      };
+
+      if (params.chart === 1) {
+        var margin = {
+            top: 32,
+            right: 40,
+            bottom: 60,
+            left: 10,
+            legend: 60
+          },
+          width = 500 - margin.left - margin.right,
+          height = 560 - margin.top - margin.bottom - margin.legend;
+
+        var x = d3.scale.linear().domain([2002.5, 2015.5]).range([0, width]);
+
+        var y = d3.scale.linear().domain([11.5, -0.5]).range([height, 0]);
+
+        var chart = d3.select('body').append('svg:svg').attr('width', width + margin.right + margin.left).attr('height', height + margin.top + margin.bottom + margin.legend).attr('class', 'chart');
+
+        var main = chart.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')').attr('width', width).attr('height', height).attr('class', 'main')
+
+        // draw the x axis
+        var xAxis = d3.svg.axis().scale(x).orient('top').tickFormat(function (d) {
+          return d + "";
+        });
+
+        main.append('g').attr('class', 'axis date').call(xAxis).selectAll("text").style("text-anchor", "end").attr("dx", "32px").attr("dy", "12px").attr("transform", function (d) {
+          return "rotate(-90)"
+        });
+
+        // draw the y axis
+        var yAxis = d3.svg.axis().scale(y).orient('right').tickFormat(function (d) {
+          switch (d) {
+            case 0:
+              return "0%";
+              break;
+            case 1:
+              return "10%";
+              break;
+            case 2:
+              return "20%";
+              break;
+            case 3:
+              return "40%";
+              break;
+            case 4:
+              return "60%";
+              break;
+            case 5:
+              return "80%";
+              break;
+            case 6:
+              return "100%";
+              break;
+            case 7:
+              return "120%";
+              break;
+            case 8:
+              return "140%";
+              break;
+            case 9:
+              return "200%";
+              break;
+            case 10:
+              return "300%";
+              break;
+            case 11:
+              return "400%";
+              break;
+            default:
+              "???";
+          }
+        });
+
+        var svg = main.append("svg");
+        var gradient = svg.append("svg:defs").append("svg:linearGradient").attr("id", "gradient").attr("x1", "100%").attr("y1", "100%").attr("x2", "100%").attr("y2", "40%").attr("x3", "100%").attr("y3", "100%").attr("spreadMethod", "pad");
+
+        gradient.append("svg:stop").attr("offset", "20%").attr("stop-color", "#eb742b").attr("stop-opacity", 1);
+        gradient.append("svg:stop").attr("offset", "80%").attr("stop-color", "#f4d62a").attr("stop-opacity", 1);
+        gradient.append("svg:stop").attr("offset", "100%").attr("stop-color", "#6bbd67").attr("stop-opacity", 1);
+        svg.append("rect").attr("width", width).attr("height", height).style("fill", "url(#gradient)");
+
+        main.append('g').attr('transform', 'translate(0,0)').attr('class', 'axis date').attr("transform", "translate(" + width + ",0)").call(yAxis).selectAll("line").style("stroke", "black").style("fill", "url(#gradient)");
+
+        var g = svg.append("g");
+
+        var dots = g.selectAll("dots-serie").data(function (d, i) {
+          return data;
+        }).enter().append("svg:g").style("fill", function (d) {
+          return d.color;
+        }).each(function () {
+          var scatter = d3.select(this);
+          scatter.selectAll("dots").data(function (d) {
+            return d.xy;
+          }). // second level data-join
+          enter().append("svg:rect").attr("width", 10).attr("height", 10).attr("x", function (d) {
+            return x(d.x);
+          }).attr("y", function (d) {
+            return y(d.y);
+          }).attr('class', 'rect-dot').attr("rx", scatter.data()[0].r).attr("ry", scatter.data()[0].r);
+//           .attr("transform", function() {
+//     return d3.svg.transform()
+//         .translate(200, 100)
+//         .rotate(-45)
+//         .translate(-d3.select(this).attr("width")/2, -d3.select(this).attr("height")/2)();
+// });
+        });
+
+        // LEGEND
+        var legend = main.append("g").attr('transform', 'translate(0,430)').attr('class', 'legend');
+
+        var legendItems = legend.append("g").selectAll("g").data(data).enter().append('g').attr('class', 'legend-item').attr('transform', function (d, i) {
+          var height = 10;
+          var x = 0;
+          var y = i * 16;
+          return 'translate(' + x + ',' + y + ')';
+        });
+
+        legendItems.append('rect').attr('x', 30).attr('y', -8).attr('rx', function (d) {
+          return d.r;
+        }).attr('ry', function (d) {
+          return d.r;
+        }).attr('width', 10).attr('height', 10).style('fill', function (d) {
+          return d.color;
+        }).attr('class', 'rect-dot');
+
+        legendItems.append('text').attr('x', 55).attr('y', 0).text(function (d) {
+          return d.label;
+        });
+      } else if (params.chart === 2) {
+        var margin = {
+            top: 40,
+            right: 40,
+            bottom: 60,
+            left: 10,
+            legend: 200
+          },
+          width = 500 - margin.left - margin.right,
+          height = 560 - margin.top - margin.bottom;
+
+        var chart = d3.select('body').append('svg:svg').attr('width', width + margin.right + margin.left + margin.legend).attr('height', height + margin.top + margin.bottom).attr('class', 'chart');
+
+        var main = chart.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')').attr('width', width).attr('height', height).attr('class', 'main')
+
+        // BOXES
+        var boxes = main.append("g").attr('transform', 'translate(0,0)').attr('class', 'boxes');
+
+        var boxesItems = boxes.append("g").selectAll("g").data(data).enter().append('g').attr('class', 'box-item').attr('transform', function (d, i) {
+          var height = 500;
+          var x = i * 120;
+          var y = 0;
+          return 'translate(' + x + ',' + y + ')';
+        });
+
+        boxesItems.append('rect').attr('x', 0).attr('y', 0).attr('width', 100).attr('height', 410).style('fill', 'ffffff').style('stroke-width', '3').style('stroke', function (d) {
+          return d.color;
+        });
+        boxesItems.append('line').attr('x1', 0).attr('y1', 205).attr('x2', 100).attr('y2', 205).attr('stroke', '#fdbd26').attr('stroke-width', 5);
+
+        boxesItems.append('rect').attr('x', 0).attr('y', 412).attr('width', 100).attr('height', 50).style('fill', 'ffffff').style('stroke-width', '2').style('stroke', '#d1d1d1');
+
+        boxesItems.append('text').attr('x', 50).attr('y', 430).style('fill', '#818181').attr("font-family", "sans-serif").attr("class", "box-bottom-label").attr('text-anchor', 'middle').text(function (d) {
+          return d.label3;
+        });
+
+        boxesItems.append('rect').attr('x', 0).attr('y', 452).attr('width', 100).attr('height', 50).style('fill', 'ffffff').style('stroke-width', '2').style('stroke', '#d1d1d1');
+
+        boxesItems.append('text').attr('x', 50).attr('y', 470).style('fill', '#818181').attr("font-family", "sans-serif").attr("class", "box-bottom-label").attr('text-anchor', 'middle').text(function (d) {
+          return d.label4;
+        });
+
+        var topBoxText = boxesItems.append('text').attr('x', 50).attr('text-anchor', 'middle').attr('y', -20).style('fill', '#818181').attr("font-family", "sans-serif").attr("class", "box-top-label");
+        topBoxText.append('tspan').text(function (d) {
+          return d.label2[0];
+        });
+        topBoxText.append('tspan').attr('dy', 16).attr('x', 50).attr('text-anchor', 'middle').text(function (d) {
+          return d.label2[1];
+        });
+
+        var t1 = chart.append('text').attr('y', 80).attr('x', 472).attr('text-anchor', 'start').text('·····').attr('fill', 'white').attr('class', 'legend-label');
+        t1.append('tspan').attr('fill', '#868686').text('Consommation faible');
+
+        var t2 = chart.append('text').attr('y', 200).attr('x', 472).attr('text-anchor', 'start').text('·····Valeur-cible').attr('fill', '#4da371').attr('class', 'legend-label');
+        var t3 = chart.append('text').attr('y', 250).attr('x', 472).attr('text-anchor', 'start').text('·····').attr('fill', 'white').attr('class', 'legend-label');
+        t3.append('tspan').text('Indice de référence').attr('fill', '#f7a319');
+        var t4 = chart.append('text').attr('y', 300).attr('x', 472).attr('text-anchor', 'start').text('·····Valeur-limite').attr('fill', '#e2635a').attr('class', 'legend-label');
+
+        var t5 = chart.append('text').attr('y', 420).attr('x', 472).attr('text-anchor', 'start').text('·····').attr('fill', 'white').attr('class', 'legend-label');
+        t5.append('tspan').attr('fill', '#868686').text('Consommation élevée');
+        var t6 = chart.append('text').attr('y', 480).attr('x', 472).attr('text-anchor', 'start').text('·····').attr('fill', 'white').attr('class', 'legend-label');
+        t6.append('tspan').attr('fill', '#868686').text('Surf. de réf. énergét.').attr('class', 'legend-bottom-label');
+
+        var t7 = chart.append('text').attr('y', 530).attr('x', 472).attr('text-anchor', 'start').text('·····').attr('fill', 'white').attr('class', 'legend-label');
+        t7.append('tspan').attr('fill', '#868686').text('Nombre d\'objets').attr('class', 'legend-bottom-label');
+      } else {
+        // no proper chart number
+        var chart = d3.select('body').append('svg:svg').attr('width', 600).attr('height', 300).attr('class', 'chart');
+        chart.append('text').attr('y', 100).attr('x', 100).text('Sorry! We don\'t know howto generate this chart :(').attr('fill', 'black');
+        chart.append('text').attr('y', 120).attr('x', 100).text('Params: ' + JSON.stringify(params)).attr('fill', 'black');
+      }
+
+    } else {
+      var chart = d3.select('body').append('svg:svg').attr('width', 600).attr('height', 300).attr('class', 'chart');
+      chart.append('text').attr('y', 100).attr('x', 100).text('No parameters provided to generate the Chart!!!').attr('fill', 'black');
+    }
+  </script>
+
+</html>
