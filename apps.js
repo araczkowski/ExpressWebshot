@@ -87,6 +87,7 @@ app.get('/shot', function(req, res) {
 
   }
 
+  //
   mergeOptions(internalParams);
   internalOptions.shotUrl = internalOptions.shotUrl + '/?params=' + externalParams;
 
