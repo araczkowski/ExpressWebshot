@@ -22,7 +22,7 @@ $ npm install
 
 **Node serve**
 ```javascript
-$ node app.js
+$ node apps.js
 ```
 
 **Take the shot**
@@ -45,9 +45,9 @@ url: http://localhost:3000/shot
 
 How to take a shot from any Website
 ===========================
-## Internal parameters 
+## Internal parameters
 
-By default options are: 
+By default options are:
 ```javascript
 {  
    "internal":{  
@@ -120,7 +120,7 @@ http://localhost:3000/shot/?params={"internal":{"shotSize":{"width":"all","heigh
 ```
 
 
-Work with PM2 
+Work with PM2
 ===========================
 
 ## Start an application
@@ -214,9 +214,6 @@ To save a process list just do:
 $ pm2 save
 ```
 
-### Update the node-express-webshot-app 
+### Update the node-express-webshot-app
 
 TODO
-
-
-
