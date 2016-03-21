@@ -89,8 +89,9 @@ app.get('/shot', function(req, res) {
 
   //
   mergeOptions(internalParams);
-  internalOptions.shotUrl = internalOptions.shotUrl + '/?params=' + externalParams;
-
+  if (typeof externalParams != 'undefined') {
+    internalOptions.shotUrl = internalOptions.shotUrl + '/?params=' + externalParams;
+  }
   webshot(internalOptions.shotUrl, internalOptions, function(err, renderStream) {
     renderStream.pipe(res);
 
